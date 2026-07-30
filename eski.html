@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jüpiter Menü</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;cursor:none}
+  img{width:100vw;height:100vh;object-fit:contain;display:block}
+  #fs{position:fixed;top:24px;right:24px;z-index:10;
+      font:700 30px/1 -apple-system,Segoe UI,Roboto,sans-serif;
+      color:#111;background:#fff;border:none;border-radius:12px;
+      padding:18px 28px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+  :fullscreen #fs,:-webkit-full-screen #fs{display:none}
+</style>
+</head>
+<body>
+  <button id="fs">⛶ Tam Ekran</button>
+  <img src="menu.jpg" alt="Menu">
+<script>
+  function goFull(){
+    var el=document.documentElement;
+    var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.webkitRequestFullScreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+    if(fn){try{fn.call(el);}catch(e){}}
+  }
+  document.getElementById('fs').addEventListener('click',goFull);
+  document.body.addEventListener('click',goFull);
+  document.body.addEventListener('keydown',goFull);
+</script>
+</body>
+</html>
