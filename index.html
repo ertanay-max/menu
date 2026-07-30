@@ -64,8 +64,10 @@
 
   <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
     <filter id="ok-liquid-c" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.0022 0.011" numOctaves="3" seed="7" result="n"></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0009 0.003" numOctaves="2" seed="11" result="n"></feTurbulence>
+      <feGaussianBlur in="n" stdDeviation="6" result="nb"></feGaussianBlur>
+      <feDisplacementMap in="SourceGraphic" in2="nb" scale="170" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+      <feGaussianBlur stdDeviation="2.2"></feGaussianBlur>
     </filter>
     <filter id="ok-grain-c">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence>
@@ -76,9 +78,9 @@
   <div style="position: absolute; inset: -12%; background: linear-gradient(108deg, #7a1fa8 0%, #c22a6b 32%, #ef5b3f 62%, #ffb454 100%); animation: ok-fade-a var(--jm-cyc, 8s) ease-in-out infinite;"></div>
   <div style="position: absolute; inset: -12%; background: linear-gradient(96deg, #0a0e2e 0%, #1b1d5e 34%, #3d2e8f 62%, #7b3fb0 100%); animation: ok-fade-b var(--jm-cyc, 8s) ease-in-out infinite;"></div>
 
-  <div style="position: absolute; inset: -25%; opacity: var(--ok-bands, .5); mix-blend-mode: soft-light; filter: url(#ok-liquid-c); background: repeating-linear-gradient(3deg, rgba(255,255,255,.85) 0px, rgba(255,255,255,.85) 9px, rgba(255,255,255,0) 9px, rgba(255,255,255,0) 46px, rgba(0,0,0,.6) 46px, rgba(0,0,0,.6) 62px, rgba(0,0,0,0) 62px, rgba(0,0,0,0) 128px); animation: ok-bands calc(var(--jm-cyc, 8s) * 3.6) ease-in-out infinite; will-change: transform;"></div>
+  <div style="position: absolute; inset: -25%; opacity: var(--ok-bands, .5); mix-blend-mode: soft-light; filter: url(#ok-liquid-c); background: repeating-radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,.65) 0%, rgba(255,255,255,.65) 4%, rgba(255,255,255,0) 15%, rgba(255,255,255,0) 26%, rgba(0,0,0,.35) 34%, rgba(0,0,0,0) 46%); animation: ok-bands calc(var(--jm-cyc, 8s) * 3.6) ease-in-out infinite; will-change: transform;"></div>
 
-  <div style="position: absolute; inset: -25%; opacity: calc(var(--ok-bands, .5) * .7); mix-blend-mode: overlay; filter: url(#ok-liquid-c); background: repeating-linear-gradient(-2deg, rgba(255,255,255,.5) 0px, rgba(255,255,255,.5) 4px, rgba(255,255,255,0) 4px, rgba(255,255,255,0) 78px, rgba(0,0,0,.5) 78px, rgba(0,0,0,.5) 96px, rgba(0,0,0,0) 96px, rgba(0,0,0,0) 210px); animation: ok-bands2 calc(var(--jm-cyc, 8s) * 5.2) ease-in-out infinite; will-change: transform;"></div>
+  <div style="position: absolute; inset: -25%; opacity: calc(var(--ok-bands, .5) * .65); mix-blend-mode: overlay; filter: url(#ok-liquid-c); background: repeating-radial-gradient(ellipse 55% 65% at 72% 35%, rgba(255,255,255,.5) 0%, rgba(255,255,255,.5) 3%, rgba(255,255,255,0) 13%, rgba(255,255,255,0) 24%, rgba(0,0,0,.3) 30%, rgba(0,0,0,0) 42%); animation: ok-bands2 calc(var(--jm-cyc, 8s) * 5.2) ease-in-out infinite; will-change: transform;"></div>
 
   <div style="position: absolute; width: 1500px; height: 1500px; left: -420px; top: -520px; border-radius: 50%; background: radial-gradient(circle, rgba(255,150,190,.7) 0%, rgba(255,150,190,0) 66%); filter: blur(60px); mix-blend-mode: screen; animation: ok-glow calc(var(--jm-cyc, 8s) * 2.4) ease-in-out infinite;"></div>
   <div style="position: absolute; width: 1400px; height: 1400px; right: -460px; bottom: -560px; border-radius: 50%; background: radial-gradient(circle, rgba(60,20,90,.85) 0%, rgba(60,20,90,0) 64%); filter: blur(70px); mix-blend-mode: multiply; animation: ok-glow calc(var(--jm-cyc, 8s) * 3.1) ease-in-out infinite reverse;"></div>
