@@ -55,6 +55,13 @@
   @keyframes ok-fade-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
   @keyframes ok-fade-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
 
+  /* TV kiosk: tam ekran dugmesi (eski menudeki davranisin aynisi).
+     Tam ekranda kendini gizler, menunun gorunusune karismaz. */
+  #fs { position: fixed; top: 24px; right: 24px; z-index: 10;
+        font: 700 30px/1 -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #111; background: #fff; border: none; border-radius: 12px;
+        padding: 18px 28px; cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,.45); }
+  :fullscreen #fs, :-webkit-full-screen #fs { display: none; }
 </style>
 </head>
 <body>
@@ -201,6 +208,7 @@
 </div>
   </div>
 </div>
+<button id="fs">⛶ Tam Ekran</button>
 <script>
   function fit() {
     var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
@@ -208,6 +216,64 @@
   }
   window.addEventListener('resize', fit);
   fit();
+
+  /* ── TV kiosk: tam ekran (eski menudeki davranisin aynisi) ───────────────── */
+  function goFull() {
+    var el = document.documentElement;
+    var fn = el.requestFullscreen || el.webkitRequestFullscreen ||
+             el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (fn) { try { fn.call(el); } catch (e) {} }
+  }
+  document.getElementById('fs').addEventListener('click', goFull);
+  document.body.addEventListener('click', goFull);
+  document.body.addEventListener('keydown', goFull);
+
+  /* ── TV kiosk: ekran uyumasin (Screen Wake Lock) ──────────────────────────
+     Sayfa gorunur oldugu surece ekrani acik tutar. Sekme arka plana alinip geri
+     gelirse kilit dusuyor → visibilitychange'te yeniden alinir.
+     Desteklemeyen tarayicilarda sessizce atlanir; o durumda TV'nin kendi guc
+     ayarindan uyku kapatilmali (asagidaki konsol mesaji bunu soyler).          */
+  var wakeLock = null;
+  async function ekraniAcikTut() {
+    if (!('wakeLock' in navigator)) {
+      console.log('[menu] Wake Lock desteklenmiyor — TV guc ayarindan uykuyu kapatin.');
+      return;
+    }
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('[menu] Ekran kilidi aktif.');
+      wakeLock.addEventListener('release', function () {
+        console.log('[menu] Ekran kilidi dustu.');
+      });
+    } catch (e) {
+      console.log('[menu] Ekran kilidi alinamadi:', e && e.message);
+    }
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && (!wakeLock || wakeLock.released)) ekraniAcikTut();
+  });
+  ekraniAcikTut();
+
+  /* ── TV kiosk: menu degisince kendi kendine tazele ────────────────────────
+     Sunucudaki Last-Modified, GOSTERILEN belgenin tarihinden yeniyse yenilenir.
+     Boylece TV'ye elle dokunmak gerekmez ve degisiklik YOKSA bosuna reload olmaz
+     (gereksiz reload, buton ile alinan tam ekrani dusururdu).
+     Not: F11 ile alinan tarayici tam ekrani reload'dan SAG CIKAR; kiosk icin F11
+     onerilir.                                                                  */
+  var BELGE_TARIHI = Date.parse(document.lastModified) || Date.now();
+  async function guncellemeVarMi() {
+    try {
+      var r = await fetch(location.pathname + '?_=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+      var lm = r.headers.get('last-modified');
+      if (!lm) return;
+      if (Date.parse(lm) > BELGE_TARIHI + 5000) {
+        console.log('[menu] Yeni menu yayinda, tazeleniyor.');
+        location.reload();
+      }
+    } catch (e) { /* ag hatasi: bir sonraki turda yeniden dener */ }
+  }
+  setInterval(guncellemeVarMi, 10 * 60 * 1000);  /* 10 dk — Pages cache-control: max-age=600 */
+  setTimeout(guncellemeVarMi, 15 * 1000);
 </script>
 </body>
 </html>
