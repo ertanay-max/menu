@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jüpiter Menü</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #12061e; }
+  @keyframes ok-line {
+    0%   { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(8px); }
+    2.6% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+    100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+  }
+  @keyframes ok-head {
+    0%   { opacity: 0; clip-path: inset(0 100% 0 0); }
+    4%   { opacity: 1; clip-path: inset(0 0 0 0); }
+    100% { opacity: 1; clip-path: inset(0 0 0 0); }
+  }
+  @keyframes ok-draw {
+    0%   { stroke-dashoffset: 414.7; opacity: .2; }
+    22%  { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes ok-mark {
+    0%   { opacity: 0; letter-spacing: .5em; filter: blur(7px); }
+    5%   { opacity: 0; letter-spacing: .42em; filter: blur(6px); }
+    26%  { opacity: 1; letter-spacing: .12em; filter: blur(0); }
+    100% { opacity: 1; letter-spacing: .12em; filter: blur(0); }
+  }
+  @keyframes ok-spec {
+    0%, 52% { transform: translateX(0); opacity: 0; }
+    58%     { opacity: .9; }
+    72%     { transform: translateX(250px); opacity: 0; }
+    100%    { transform: translateX(250px); opacity: 0; }
+  }
+  @keyframes ok-spin { to { transform: rotate(360deg); } }
+  @keyframes ok-orbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes ok-moon { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes ok-bands { 0% { transform: translate3d(0,0,0) scale(1.18); } 50% { transform: translate3d(-3%, 2.2%, 0) scale(1.24); } 100% { transform: translate3d(0,0,0) scale(1.18); } }
+  @keyframes ok-bands2 { 0% { transform: translate3d(0,0,0) scale(1.3); } 50% { transform: translate3d(4%, -2%, 0) scale(1.22); } 100% { transform: translate3d(0,0,0) scale(1.3); } }
+  @keyframes ok-hue { 0% { filter: hue-rotate(0deg) saturate(1); } 50% { filter: hue-rotate(-7deg) saturate(1.12); } 100% { filter: hue-rotate(0deg) saturate(1); } }
+  @keyframes ok-glow { 0% { transform: translate(0,0) scale(1); opacity: .55; } 50% { transform: translate(6%, -4%) scale(1.18); opacity: .8; } 100% { transform: translate(0,0) scale(1); opacity: .55; } }
+  @keyframes ok-ring { 0% { transform: rotate(-8deg) scale(1); opacity: .16; } 50% { transform: rotate(4deg) scale(1.04); opacity: .26; } 100% { transform: rotate(-8deg) scale(1); opacity: .16; } }
+  @keyframes ok-kb { 0% { transform: scale(1); } 50% { transform: scale(1.012); } 100% { transform: scale(1); } }
+  @keyframes ok-comet {
+    0%, 62%  { transform: translate(-420px, 260px) rotate(-24deg); opacity: 0; }
+    68%      { opacity: .9; }
+    86%      { transform: translate(2180px, -180px) rotate(-24deg); opacity: 0; }
+    100%     { transform: translate(2180px, -180px) rotate(-24deg); opacity: 0; }
+  }
+
+  @keyframes ok-fade-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes ok-fade-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* TV kiosk: tam ekran dugmesi (eski menudeki davranisin aynisi).
+     Tam ekranda kendini gizler, menunun gorunusune karismaz. */
+  #fs { position: fixed; top: 24px; right: 24px; z-index: 10;
+        font: 700 30px/1 -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #111; background: #fff; border: none; border-radius: 12px;
+        padding: 18px 28px; cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,.45); }
+  :fullscreen #fs, :-webkit-full-screen #fs { display: none; }
+</style>
+</head>
+<body>
+<div id="stage-wrap" style="width: 100vw; height: 100vh; position: relative; background: #12061e; overflow: hidden;">
+  <div id="stage" style="width: 1920px; height: 1080px; position: absolute; left: 50%; top: 50%; transform-origin: center;">
+<div style="--jm-cyc: 8s; --ok-bands: .85; --jm-cold: #c9b6ff; width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #1a0f2e; font-family: Jost, 'Trebuchet MS', sans-serif; color: #fff; border-radius: 8px;">
+
+  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <filter id="ok-liquid-c" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0009 0.003" numOctaves="2" seed="11" result="n"></feTurbulence>
+      <feGaussianBlur in="n" stdDeviation="6" result="nb"></feGaussianBlur>
+      <feDisplacementMap in="SourceGraphic" in2="nb" scale="170" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+      <feGaussianBlur stdDeviation="2.2"></feGaussianBlur>
+    </filter>
+    <filter id="ok-grain-c">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+    </filter>
+  </svg>
+
+  <div style="position: absolute; inset: -12%; background: linear-gradient(108deg, #7a1fa8 0%, #c22a6b 32%, #ef5b3f 62%, #ffb454 100%); animation: ok-fade-a var(--jm-cyc, 8s) ease-in-out infinite;"></div>
+  <div style="position: absolute; inset: -12%; background: linear-gradient(96deg, #0a0e2e 0%, #1b1d5e 34%, #3d2e8f 62%, #7b3fb0 100%); animation: ok-fade-b var(--jm-cyc, 8s) ease-in-out infinite;"></div>
+
+  <div style="position: absolute; inset: -25%; opacity: var(--ok-bands, .5); mix-blend-mode: soft-light; filter: url(#ok-liquid-c); background: repeating-radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,.65) 0%, rgba(255,255,255,.65) 4%, rgba(255,255,255,0) 15%, rgba(255,255,255,0) 26%, rgba(0,0,0,.35) 34%, rgba(0,0,0,0) 46%); animation: ok-bands calc(var(--jm-cyc, 8s) * 3.6) ease-in-out infinite; will-change: transform;"></div>
+
+  <div style="position: absolute; inset: -25%; opacity: calc(var(--ok-bands, .5) * .65); mix-blend-mode: overlay; filter: url(#ok-liquid-c); background: repeating-radial-gradient(ellipse 55% 65% at 72% 35%, rgba(255,255,255,.5) 0%, rgba(255,255,255,.5) 3%, rgba(255,255,255,0) 13%, rgba(255,255,255,0) 24%, rgba(0,0,0,.3) 30%, rgba(0,0,0,0) 42%); animation: ok-bands2 calc(var(--jm-cyc, 8s) * 5.2) ease-in-out infinite; will-change: transform;"></div>
+
+  <div style="position: absolute; width: 1500px; height: 1500px; left: -420px; top: -520px; border-radius: 50%; background: radial-gradient(circle, rgba(255,150,190,.7) 0%, rgba(255,150,190,0) 66%); filter: blur(60px); mix-blend-mode: screen; animation: ok-glow calc(var(--jm-cyc, 8s) * 2.4) ease-in-out infinite;"></div>
+  <div style="position: absolute; width: 1400px; height: 1400px; right: -460px; bottom: -560px; border-radius: 50%; background: radial-gradient(circle, rgba(60,20,90,.85) 0%, rgba(60,20,90,0) 64%); filter: blur(70px); mix-blend-mode: multiply; animation: ok-glow calc(var(--jm-cyc, 8s) * 3.1) ease-in-out infinite reverse;"></div>
+
+  <div style="position: absolute; left: 50%; top: 54%; width: 2600px; height: 1180px; margin: -590px 0 0 -1300px; border-radius: 50%; border: 1px solid rgba(255,255,255,.5); transform-origin: 50% 50%; animation: ok-ring calc(var(--jm-cyc, 8s) * 4) ease-in-out infinite;"></div>
+  <div style="position: absolute; left: 50%; top: 54%; width: 2180px; height: 900px; margin: -450px 0 0 -1090px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); transform-origin: 50% 50%; animation: ok-ring calc(var(--jm-cyc, 8s) * 5.5) ease-in-out infinite reverse;"></div>
+
+  <div style="position: absolute; left: 0; top: 0; width: 300px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95), rgba(255,255,255,0)); filter: blur(1.5px); box-shadow: 0 0 26px 6px rgba(255,255,255,.5); animation: ok-comet var(--jm-cyc, 8s) cubic-bezier(.3,0,.2,1) infinite both;"></div>
+
+  <div style="position: absolute; inset: 0; opacity: .07; mix-blend-mode: overlay; pointer-events: none; filter: url(#ok-grain-c);"></div>
+  <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 45%, rgba(0,0,0,0) 42%, rgba(0,0,0,.42) 100%);"></div>
+
+  <div style="position: absolute; inset: 0; transform-origin: 50% 48%; animation: ok-kb calc(var(--jm-cyc, 8s) * 4) ease-in-out infinite; padding: 66px 92px 64px; box-sizing: border-box; display: grid; grid-template-columns: 1.12fr 1fr; column-gap: 72px;">
+    <div style="display: flex; flex-direction: column; gap: 0;">
+      <div style="display: flex; align-items: baseline; gap: 20px; min-width: 0; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.02s;">
+        <div style="font-size: 40px; font-weight: 500; letter-spacing: .045em;">İÇECEKLER / DRINKS</div>
+        <div style="font-size: 17px; font-weight: 400; letter-spacing: .09em; opacity: .8; margin-left: auto; white-space: nowrap; flex: none;">MİNİ / NORMAL / BIG</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 16px; padding-left: 40px;">
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.07s;"><div>Espresso</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">170 / 230</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.08s;"><div>Americano</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">170 / 230 / 290</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.10s;"><div>Türk Kahvesi</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">180 / 240</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.11s;"><div>Filtre <span style="font-size: 22px; font-style: italic; opacity: .85;">sütlü +15</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">140 / 180 / 240</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.13s;"><div>Cortado &amp; Piccolo Latte</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">210</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.15s;"><div>Latte &amp; Cappuccino</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">240 / 300</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.16s;"><div>Red Eye</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">240</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.19s;"><div>Chai Tea Latte</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">260 / 320</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.20s;"><div>Flat White</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">260</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.22s;"><div>Mocha &amp; Aromalı Latteler</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">280 / 340</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.24s;"><div>Ceremonial Matcha Latte <span style="font-size: 22px; font-style: italic; opacity: .85;">şurup +60</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">250 / 330</div></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 40px 1fr; margin-top: 20px; align-items: stretch;">
+        <div style="display: flex; align-items: center; justify-content: center; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.71s;">
+          <div style="writing-mode: vertical-rl; transform: rotate(180deg); font-size: 25px; font-weight: 500; letter-spacing: .18em; color: var(--jm-cold, #ffe14d);">COLD / SOĞUK</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px; color: var(--jm-cold, #ffe14d);">
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.74s;"><div>Sunrise</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">250 / 310</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.75s;"><div>Cold Brew</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">250 / 310</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.77s;"><div>Espresso Tonic</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">250 / 310</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.79s;"><div>Ice Americano &amp; Ice Latte</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">240 / 300</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.81s;"><div>Limonata <span style="font-size: 22px; font-style: italic; opacity: .9;">homemade &amp; natural</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">290 / 350</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.83s;"><div>Frozen</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">310 / 370</div></div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.84s;"><div>Ice Tea <span style="font-size: 22px; font-style: italic; opacity: .9;">homemade &amp; natural</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">230 / 290</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding-left: 40px; display: flex; gap: 34px; font-size: 27px; font-weight: 300; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 0.90s;">
+        <div>Çay <span style="font-variant-numeric: tabular-nums;">150</span></div>
+        <div style="opacity: .55;">/</div>
+        <div>Rooibos Vanilya <span style="font-variant-numeric: tabular-nums;">190</span></div>
+        <div style="opacity: .55;">/</div>
+        <div>Bitki Çayı <span style="font-variant-numeric: tabular-nums;">240</span></div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <div style="font-size: 40px; font-weight: 500; letter-spacing: .045em; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.15s;">TATLILAR / SWEETS</div>
+      <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.19s;"><div>Vegan Toplar</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">250</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.21s;"><div>Banana Bread &amp; Kekler</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">340</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.22s;"><div>Vişneli Bademli Brownie <span style="font-size: 22px; font-style: italic; opacity: .85;">dondurma +60</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">380</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.25s;"><div>Havuçlu Cevizli Kremalı Kek</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">380</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.26s;"><div>Orman Meyveli Crumble</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">360</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.28s;"><div>Marlenka</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">360</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.30s;"><div>Flan Parisien</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">380</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.31s;"><div>Çilekli Tart</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">380</div></div>
+      </div>
+
+      <div style="font-size: 40px; font-weight: 500; letter-spacing: .045em; margin-top: 34px; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.56s;">TUZLULAR / SAVORIES</div>
+      <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.60s;"><div>Mini Sandviç</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">170</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.62s;"><div>Croissant <span style="font-size: 22px; font-style: italic; opacity: .85;">peynir / nutella +60</span></div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">220</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.63s;"><div>Croissant Sandviç</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">340</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.66s;"><div>E. Mayalı Hindi Füme Cheddar Tost</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">350</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.67s;"><div>E. Mayalı Mozzarella Tomato Pesto Tost</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">350</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.69s;"><div>E. Mayalı 2 Zeytinli 3 Peynirli Tost</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">320</div></div>
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 26px; font-size: 29px; font-weight: 300; line-height: 1.2; animation: ok-line var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.71s;"><div>Tonlu Sandviç &quot;Pan Bagnat&quot;</div><div style="font-variant-numeric: tabular-nums; font-weight: 500; font-size: 32px; white-space: nowrap; letter-spacing: .005em; text-shadow: 0 2px 8px rgba(0,0,0,.55);">400</div></div>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 28px; display: grid; grid-template-columns: 1fr auto auto; align-items: end; gap: 26px;">
+        <div style="border: 2px solid rgba(255,255,255,.85); border-radius: 4px; padding: 15px 20px; display: flex; flex-direction: column; gap: 7px; font-size: 19px; white-space: nowrap; font-weight: 400; letter-spacing: .06em; animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.94s;">
+          <div>BÜYÜK / LARGE +60</div>
+          <div>BİTKİSEL SÜT / PLANT B. MILK +60</div>
+          <div>KAFEİNSİZ / DECAF +50</div>
+        </div>
+        <div style="border: 2px solid rgba(255,255,255,.85); border-radius: 4px; padding: 15px 20px; display: flex; flex-direction: column; gap: 7px; font-size: 19px; white-space: nowrap; font-weight: 400; letter-spacing: .06em; color: var(--jm-cold, #ffe14d); border-color: var(--jm-cold, #ffe14d); animation: ok-head var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; animation-delay: 1.98s;">
+          <div>YİYECEKTE</div>
+          <div>ÖĞRENCİ</div>
+          <div>İNDİRİMİ %10</div>
+        </div>
+        <div style="position: relative; width: 168px; height: 168px; display: flex; align-items: center; justify-content: center;">
+          <div style="position: absolute; inset: 0; animation: ok-orbit 14s linear infinite;">
+            <div style="position: absolute; left: 50%; top: 50%; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); transform: rotateX(68deg) rotateZ(18deg);"></div>
+          </div>
+          <div style="position: absolute; inset: 0; animation: ok-moon 6.5s linear infinite;">
+            <div style="position: absolute; left: 50%; top: -3px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #fff6dd; box-shadow: 0 0 14px 3px rgba(255,236,190,.85);"></div>
+          </div>
+          <div style="position: absolute; inset: 0; animation: ok-moon 6.5s linear infinite; animation-delay: -.16s; opacity: .45;">
+            <div style="position: absolute; left: 50%; top: -2px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #ffe6b4;"></div>
+          </div>
+          <div style="position: absolute; inset: 0; animation: ok-moon 6.5s linear infinite; animation-delay: -.32s; opacity: .2;">
+            <div style="position: absolute; left: 50%; top: -1px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: #ffdca0;"></div>
+          </div>
+          <svg viewBox="0 0 168 168" style="position: absolute; inset: 0; width: 168px; height: 168px; overflow: visible;">
+            <circle cx="84" cy="84" r="66" fill="none" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="414.7" style="animation: ok-draw var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both; transform-origin: 84px 84px; transform: rotate(-90deg);"></circle>
+            <circle cx="84" cy="84" r="76" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1" stroke-dasharray="6 14" style="animation: ok-spin 40s linear infinite; transform-origin: 84px 84px;"></circle>
+          </svg>
+          <div style="position: relative; width: 132px; height: 132px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 21px; font-weight: 500; letter-spacing: .12em; white-space: nowrap; animation: ok-mark var(--jm-cyc, 10s) cubic-bezier(.16,1,.3,1) infinite both;">JÜPİTER</div>
+            <div style="position: absolute; top: -40%; bottom: -40%; width: 46px; left: -60px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.75), rgba(255,255,255,0)); filter: blur(6px); mix-blend-mode: screen; animation: ok-spec var(--jm-cyc, 10s) cubic-bezier(.5,0,.2,1) infinite both;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+<button id="fs">⛶ Tam Ekran</button>
+<script>
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.getElementById('stage').style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* ── TV kiosk: tam ekran (eski menudeki davranisin aynisi) ───────────────── */
+  function goFull() {
+    var el = document.documentElement;
+    var fn = el.requestFullscreen || el.webkitRequestFullscreen ||
+             el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (fn) { try { fn.call(el); } catch (e) {} }
+  }
+  document.getElementById('fs').addEventListener('click', goFull);
+  document.body.addEventListener('click', goFull);
+  document.body.addEventListener('keydown', goFull);
+
+  /* ── TV kiosk: ekran uyumasin (Screen Wake Lock) ──────────────────────────
+     Sayfa gorunur oldugu surece ekrani acik tutar. Sekme arka plana alinip geri
+     gelirse kilit dusuyor → visibilitychange'te yeniden alinir.
+     Desteklemeyen tarayicilarda sessizce atlanir; o durumda TV'nin kendi guc
+     ayarindan uyku kapatilmali (asagidaki konsol mesaji bunu soyler).          */
+  var wakeLock = null;
+  async function ekraniAcikTut() {
+    if (!('wakeLock' in navigator)) {
+      console.log('[menu] Wake Lock desteklenmiyor — TV guc ayarindan uykuyu kapatin.');
+      return;
+    }
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('[menu] Ekran kilidi aktif.');
+      wakeLock.addEventListener('release', function () {
+        console.log('[menu] Ekran kilidi dustu.');
+      });
+    } catch (e) {
+      console.log('[menu] Ekran kilidi alinamadi:', e && e.message);
+    }
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && (!wakeLock || wakeLock.released)) ekraniAcikTut();
+  });
+  ekraniAcikTut();
+
+  /* ── TV kiosk: menu degisince kendi kendine tazele ────────────────────────
+     Sunucudaki Last-Modified, GOSTERILEN belgenin tarihinden yeniyse yenilenir.
+     Boylece TV'ye elle dokunmak gerekmez ve degisiklik YOKSA bosuna reload olmaz
+     (gereksiz reload, buton ile alinan tam ekrani dusururdu).
+     Not: F11 ile alinan tarayici tam ekrani reload'dan SAG CIKAR; kiosk icin F11
+     onerilir.                                                                  */
+  var BELGE_TARIHI = Date.parse(document.lastModified) || Date.now();
+  async function guncellemeVarMi() {
+    try {
+      var r = await fetch(location.pathname + '?_=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+      var lm = r.headers.get('last-modified');
+      if (!lm) return;
+      if (Date.parse(lm) > BELGE_TARIHI + 5000) {
+        console.log('[menu] Yeni menu yayinda, tazeleniyor.');
+        location.reload();
+      }
+    } catch (e) { /* ag hatasi: bir sonraki turda yeniden dener */ }
+  }
+  setInterval(guncellemeVarMi, 10 * 60 * 1000);  /* 10 dk — Pages cache-control: max-age=600 */
+  setTimeout(guncellemeVarMi, 15 * 1000);
+</script>
+</body>
+</html>
